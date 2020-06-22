@@ -40,6 +40,7 @@ int main()
 			std::cout << "Invalid placeholder size spec" << std::endl;
 			break;
 		default:
+			std::cout << "System error. Code " << res << std::endl;
 			break;
 		}
 	}
