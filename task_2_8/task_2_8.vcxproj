@@ -163,6 +163,7 @@
     <ClInclude Include="game_render.h" />
     <ClInclude Include="game_status.h" />
     <ClInclude Include="key_codes.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="mole.h" />
     <ClInclude Include="mole_gender.h" />
     <ClInclude Include="mole_status.h" />

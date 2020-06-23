@@ -9,6 +9,22 @@
 #include "mole.h"
 #include "game_status.h"
 
+/*
+	Ќиже настройки игры. ћен€й их в любую сторону и чувствуй изменение сложности.
+	„ем значение меньше - тем чаже будет выполн€тс€ то или иное действие.
+*/
+
+//шанс, что крот будет что-то делать
+const double MOLE_ACTIVE_PROB = 0.30;
+//шанс, что крот вылезет
+const double MOLE_SHOW_PROB = 0.25;
+//шанс, что крот спр€четс€
+const double MOLE_HIDE_PROB = 0.50;//0.20;
+//шанс, что крот съест урожай
+const double MOLE_EAT_PROB = 0.25;
+//шанс, что крот будет двигатьс€
+const double MOLE_MOVE_PROB = 0.30;
+
 class GameField {
 public:
 	GameField(size_t w, size_t h);
@@ -16,11 +32,12 @@ public:
 	GameStatus update();
 	//двигаем игрока по полю
 	void moveFarmer(MoveDirection dir);
-	//ѕоиск крота по заданным координатам
+	//ѕоиск крота по заданному предикату
 	//возвращает итератор, по скольку
 	//через него проще манипулировать модел€ми
 	//std::list<Mole>::iterator findMole(int x, int y);
 	std::list<Mole>::iterator findMole(const std::function<bool(Mole&)>& predicate);
+	
 	/*
 		–азное дл€ рендера
 	*/

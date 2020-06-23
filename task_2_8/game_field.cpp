@@ -17,31 +17,39 @@ GameField::GameField(size_t w, size_t h) {
 	m_moles.push_back(Mole(4, 4, MoleGender::Female));
 };
 
-//шанс, что крот будет что-то делать
-const double MOLE_ACTIVE_PROB = 0.30;
-//шанс, что крот вылезет
-const double MOLE_SHOW_PROB = 0.25;
-//шанс, что крот спрячется
-const double MOLE_HIDE_PROB = 0.20;
-//шанс, что крот съест урожай
-const double MOLE_EAT_PROB = 0.25;
-//шанс, что крот будет двигаться
-const double MOLE_MOVE_PROB = 0.30;
+///*
+//	Ниже настройки игры. Меняй их в любую сторону и чувствуй изменение сложности.
+//	Чем значение меньше - тем чаже будет выполнятся то или иное действие.
+//*/
+//
+////шанс, что крот будет что-то делать
+//const double MOLE_ACTIVE_PROB = 0.30;
+////шанс, что крот вылезет
+//const double MOLE_SHOW_PROB = 0.25;
+////шанс, что крот спрячется
+//const double MOLE_HIDE_PROB = 0.50;//0.20;
+////шанс, что крот съест урожай
+//const double MOLE_EAT_PROB = 0.25;
+////шанс, что крот будет двигаться
+//const double MOLE_MOVE_PROB = 0.30;
 
-//TODO: ввести кучу констант на шансы для каждого действия
-//MOLE_EAT_PROB = 0.6 - с вероятностью 60% если крот на верху он съест что-то
+
 GameStatus GameField::update() {
 	//заведем генераторы рандома
 	std::default_random_engine rnd_eng{std::random_device()()};
+	//Для шанса на действие
 	std::uniform_real_distribution<double> frnd(0., 1.);
+	//Для рандомайза позиции
 	std::uniform_int_distribution<int> wrnd(0, m_width - 1);
 	std::uniform_int_distribution<int> hrnd(0, m_height - 1);
+	
 	//Сначала обрабатываем шаг игрока
 	//т.е. если фермер наступил на крота, который не спрятался - он умирает
 	//сохраним координаты фермера
 	auto f_x = m_farmer.x();
 	auto f_y = m_farmer.y();
-	GameStatus ret_status = GameStatus::Ok;
+	//Статус игры
+	GameStatus ret_status = GameStatus::Play;
 	//пытаемся найти крота, на которого наступил фермер и который находится на верху
 	auto moleIt = findMole([&f_x, &f_y](Mole& m) {
 		return m.x() == f_x && m.y() == f_y && m.status() == MoleStatus::Show;
@@ -68,7 +76,7 @@ GameStatus GameField::update() {
 					m->setX(wrnd(rnd_eng));
 					m->setY(hrnd(rnd_eng));
 				}
-				//возможно, захочет выйти
+				//возможно, захочет выйти на поверхность
 				if (frnd(rnd_eng) >= MOLE_SHOW_PROB) {
 					m->setStatus(MoleStatus::Show);
 				}
@@ -89,6 +97,7 @@ GameStatus GameField::update() {
 	}
 	//тут подводим итоги
 	
+	//Если все кроты мертвы
 	if (m_moles.size() == 0)
 		ret_status = GameStatus::AllMolesDead;
 
@@ -101,6 +110,7 @@ GameStatus GameField::update() {
 	if (f_cnt == 0)
 		ret_status = GameStatus::FieldIsEmpty;
 
+	//Возвращаем статус
 	return ret_status;
 }
 

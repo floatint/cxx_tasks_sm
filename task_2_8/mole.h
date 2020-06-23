@@ -3,9 +3,10 @@
 #include "mole_gender.h"
 #include "mole_status.h"
 
+//Модель крота
+
 class Mole {
 public:
-	//Mole() : Mole(0, 0, MoleGender::Male);
 	Mole(int x, int y, MoleGender gender);
 	MoleGender gender() const;
 	MoleStatus status() const;

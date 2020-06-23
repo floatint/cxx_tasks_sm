@@ -1,5 +1,7 @@
 #pragma once
 
+//Модель фермера
+
 class Farmer {
 public:
 	Farmer();
