@@ -26,5 +26,8 @@
     <ClInclude Include="my_map.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="safe_io.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

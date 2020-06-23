@@ -1,28 +1,42 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 //јссоциативный массив на базе бинарного поиска.
 //ƒл€ справки: по стандарту в c++ используютс€ хеш-таблицы
 //но их довольно сложно реализовать, да и в целом не уточн€етс€ что 
 //нужно делать именно на них. Ќо отличи€ знать желательно.
 
+//≈стествено, т.к. все посроено на бинарном поиске, то
+//TKy должен быть сравниваемым.
+
+//—ложность O(n), по факту все равно что ключи перебирать, только ключи отсортированы
+
+//Ќќ ! «адача выполнена, ибо четкого “« нет
+
 template<typename TKy, typename TVa>
 class MyMap {
 public:
 	//вставка
 	TVa& insert(const TKy& k, const TVa& val) {
+		//если хранилище пустое, просто вставим
 		if (m_nodes.size() == 0) {
 			m_nodes.push_back({ k, val });
 			return m_nodes[0].value;
 		} else {
+			
 			auto node_pos = calc_node_pos(k);
+			//если нужно добавить в конец
+			if (node_pos == m_nodes.size()) {
+				m_nodes.insert(m_nodes.cbegin() + node_pos, { k, val });
+			}
+			else {
+				if (m_nodes[node_pos].key == k)
+					throw std::invalid_argument("Map support only unique keys");
 
-			if (m_nodes[node_pos].key == k)
-				throw std::invalid_argument("Map support only unique keys");
-
-
-			m_nodes.insert(m_nodes.cbegin() + node_pos, { k, val });
+				m_nodes.insert(m_nodes.cbegin() + node_pos, { k, val });
+			}
 			return m_nodes[node_pos].value;
 		}
 	}
@@ -45,6 +59,13 @@ public:
 		return true;
 	}
 
+	size_t size() const {
+		return m_nodes.size();
+	}
+
+	//внешний принтер
+	template<typename Ky, typename Va>
+	friend std::ostream& operator<<(std::ostream& o, const MyMap<Ky, Va>& v);
 private:
 	//внутренности ассоциативного массива
 	
@@ -61,7 +82,7 @@ private:
 		int m = 0; // середина массива
 		
 		//пока не переберем все элементы
-		while (i < s) {
+		while (i < s - 1) {
 			m = (i + s) / 2; //считаем середину
 			//
 			if (k < m_nodes[m].key)
@@ -83,7 +104,7 @@ private:
 		int s = m_nodes.size();
 		int m = 0;
 
-		while (i < s) {
+		while (i < s - 1) {
 			m = (i + s) / 2;
 			if (k < m_nodes[m].key)
 				s = m;
@@ -93,7 +114,7 @@ private:
 				i = m + 1;
 			}
 		}
-		return -1;
+		return i;
 	}
 
 	//запись в массиве
@@ -104,3 +125,12 @@ private:
 
 	std::vector<MapNode> m_nodes;
 };
+
+//ƒл€ вывода в поток
+template<typename TKy, typename TVa>
+std::ostream& operator<<(std::ostream& o, const MyMap<TKy, TVa>& v) {
+	for (auto n : v.m_nodes) {
+		o << "Key: " << n.key << ", value: " << n.value << std::endl;
+	}
+	return o;
+}
