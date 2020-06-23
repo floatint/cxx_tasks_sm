@@ -13,25 +13,19 @@ GameField::GameField(size_t w, size_t h) {
 	//создаем фермера
 	m_farmer = Farmer();
 	//ну и пару крыс
-	m_moles.push_back(Mole(3, 7, MoleGender::Male));
-	m_moles.push_back(Mole(4, 4, MoleGender::Female));
-};
 
-///*
-//	Ниже настройки игры. Меняй их в любую сторону и чувствуй изменение сложности.
-//	Чем значение меньше - тем чаже будет выполнятся то или иное действие.
-//*/
-//
-////шанс, что крот будет что-то делать
-//const double MOLE_ACTIVE_PROB = 0.30;
-////шанс, что крот вылезет
-//const double MOLE_SHOW_PROB = 0.25;
-////шанс, что крот спрячется
-//const double MOLE_HIDE_PROB = 0.50;//0.20;
-////шанс, что крот съест урожай
-//const double MOLE_EAT_PROB = 0.25;
-////шанс, что крот будет двигаться
-//const double MOLE_MOVE_PROB = 0.30;
+	//заведем генераторы рандома
+	std::default_random_engine rnd_eng{ std::random_device()() };
+	//Для рандомайза позиции
+	std::uniform_int_distribution<int> wrnd(0, m_width - 1);
+	std::uniform_int_distribution<int> hrnd(0, m_height - 1);
+
+	m_moles.push_back(Mole(wrnd(rnd_eng), hrnd(rnd_eng), MoleGender::Male));
+	m_moles.push_back(Mole(wrnd(rnd_eng), hrnd(rnd_eng), MoleGender::Female));
+
+	m_moles.push_back(Mole(wrnd(rnd_eng), hrnd(rnd_eng), MoleGender::Male));
+	m_moles.push_back(Mole(wrnd(rnd_eng), hrnd(rnd_eng), MoleGender::Female));
+};
 
 
 GameStatus GameField::update() {
@@ -42,6 +36,8 @@ GameStatus GameField::update() {
 	//Для рандомайза позиции
 	std::uniform_int_distribution<int> wrnd(0, m_width - 1);
 	std::uniform_int_distribution<int> hrnd(0, m_height - 1);
+	//для гендера
+	std::uniform_int_distribution<int> grnd(0, 1);
 	
 	//Сначала обрабатываем шаг игрока
 	//т.е. если фермер наступил на крота, который не спрятался - он умирает
@@ -51,7 +47,7 @@ GameStatus GameField::update() {
 	//Статус игры
 	GameStatus ret_status = GameStatus::Play;
 	//пытаемся найти крота, на которого наступил фермер и который находится на верху
-	auto moleIt = findMole([&f_x, &f_y](Mole& m) {
+	auto moleIt = std::find_if(m_moles.begin(), m_moles.end(), [f_x, f_y](const Mole& m) {
 		return m.x() == f_x && m.y() == f_y && m.status() == MoleStatus::Show;
 	});
 	//если такой нашелся
@@ -68,6 +64,19 @@ GameStatus GameField::update() {
 		//если было решено, что крот будет что-то делать
 		if (active >= MOLE_ACTIVE_PROB) {
 			//проверим, какой статус имеет крот
+			if (m->status() == MoleStatus::MakeChild) {
+				//добавляем нового крота рядом с родителями
+				if (frnd(rnd_eng) >= MOLE_BORN_PROB) {
+					m_moles.push_back(Mole(m->x(), m->y(), (MoleGender)grnd(rnd_eng)));
+					//находим партнера крота
+					auto part = std::find_if(m_moles.begin(), m_moles.end(), [&m](const Mole& p) {
+						return m->x() == p.x() && m->y() == p.y() && m->gender() != p.gender() && m->status() == p.status();
+					});
+					//меняем статус
+					part->setStatus(MoleStatus::Hidden);
+					m->setStatus(MoleStatus::Hidden);
+				}
+			}
 			//если он прячется
 			if (m->status() == MoleStatus::Hidden) {
 				//возможно он захочет зменить позицию
@@ -76,10 +85,24 @@ GameStatus GameField::update() {
 					m->setX(wrnd(rnd_eng));
 					m->setY(hrnd(rnd_eng));
 				}
-				//возможно, захочет выйти на поверхность
-				if (frnd(rnd_eng) >= MOLE_SHOW_PROB) {
-					m->setStatus(MoleStatus::Show);
+				//возможно он захочет сделать маленького крота
+				//тогда ему нужен партнер
+				auto part = std::find_if(m, m_moles.end(), [&m](const Mole& p) {
+					return m->x() == p.x() && m->y() == p.y() && m->gender() != p.gender() && m->status() == p.status();
+				});
+				//если такой имеется
+				if (part != m_moles.cend()) {
+					//заставляем рожать
+					m->setStatus(MoleStatus::MakeChild);
+					part->setStatus(MoleStatus::MakeChild);
 				}
+				else {
+					//возможно, захочет выйти на поверхность
+					if (frnd(rnd_eng) >= MOLE_SHOW_PROB) {
+						m->setStatus(MoleStatus::Show);
+					}
+				}
+
 			}
 			//если на поверхности
 			if (m->status() == MoleStatus::Show) {
@@ -138,20 +161,6 @@ void GameField::moveFarmer(MoveDirection dir) {
 			m_farmer.setX(m_farmer.x() + 1);
 		}
 	}
-}
-
-//std::list<Mole>::iterator GameField::findMole(int x, int y) {
-//	for (auto m = m_moles.begin(); m != m_moles.end(); m++)
-//		if (m->x() == x && m->y() == y)
-//			return m;
-//	return m_moles.end();
-//}
-
-std::list<Mole>::iterator GameField::findMole(const std::function<bool(Mole&)>& predicate) {
-	for (auto m = m_moles.begin(); m != m_moles.end(); m++)
-		if (predicate(*m))
-			return m;
-	return m_moles.end();
 }
 
 const bool** GameField::getField() const {

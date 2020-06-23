@@ -24,6 +24,8 @@ const double MOLE_HIDE_PROB = 0.50;//0.20;
 const double MOLE_EAT_PROB = 0.25;
 //шанс, что крот будет двигаться
 const double MOLE_MOVE_PROB = 0.30;
+//шанс, что родился новый крот
+const double MOLE_BORN_PROB = 0.10;
 
 class GameField {
 public:
@@ -32,11 +34,6 @@ public:
 	GameStatus update();
 	//двигаем игрока по полю
 	void moveFarmer(MoveDirection dir);
-	//Поиск крота по заданному предикату
-	//возвращает итератор, по скольку
-	//через него проще манипулировать моделями
-	//std::list<Mole>::iterator findMole(int x, int y);
-	std::list<Mole>::iterator findMole(const std::function<bool(Mole&)>& predicate);
 	
 	/*
 		Разное для рендера

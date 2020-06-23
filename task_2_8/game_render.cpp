@@ -26,13 +26,21 @@ void GameRender::render(const GameField& field) {
 			}
 			else {
 				//если в клетке крот
-				auto moleIt = findMole(moles, x, y);
+				auto moleIt = std::find_if(moles.cbegin(), moles.cend(), [x, y](const Mole& m) {
+					return m.x() == x && m.y() == y;
+				});
+				//auto moleIt = field.findMole([&x, &y](const Mole& m) {
+				//	return m.x() == x && m.y() == y;
+				//});
 				if (moleIt != moles.cend()) {
 					if (moleIt->status() == MoleStatus::Hidden) {
 						SetConsoleTextAttribute(con, HIDDEN_MOLE_COLOR);
 					}
 					if (moleIt->status() == MoleStatus::Show) {
 						SetConsoleTextAttribute(con, SHOW_MOLE_COLOR);
+					}
+					if (moleIt->status() == MoleStatus::MakeChild) {
+						SetConsoleTextAttribute(con, CHILD_MOLE_COLOR);
 					}
 					std::cout << "M";
 					SetConsoleTextAttribute(con, OTHER_ITEMS_COLOR);
@@ -62,12 +70,4 @@ void GameRender::render(const GameField& field) {
 	}
 	std::cout << "Status: ";
 
-}
-
-std::list<Mole>::const_iterator GameRender::findMole(const std::list<Mole>& moles, int x, int y) {
-	for (auto m = moles.cbegin(); m != moles.cend(); m++) {
-		if (m->x() == x && m->y() == y)
-			return m;
-	}
-	return moles.cend();
 }

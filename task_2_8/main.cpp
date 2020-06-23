@@ -60,7 +60,7 @@ int main()
 			//если игра продолжается просто симулируем ее
 			if (key == (int)KeyCodes::Space) {
 				if (status == GameStatus::Play) {
-					gf.update();
+					status = gf.update();
 				}
 			}
 
