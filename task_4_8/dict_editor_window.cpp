@@ -161,7 +161,9 @@ void DictEditorWindow::updateWordsList() {
 	//далее опять заполним его 
 	for (int i = 0; i < m_dict.size(); i++) {
 		auto bases = m_dict.getBases();
-		m_wordsList.push_back({ bases[i], m_dict.getNode(bases[i]) });
+		DictionaryNode node;
+		m_dict.getNode(bases[i], node);
+		m_wordsList.push_back({ bases[i], node });
 	}
 	//очищаем визуал
 	ui.wordsList->clear();

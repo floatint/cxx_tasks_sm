@@ -12,7 +12,7 @@ class Dictionary {
 public:
 	void addNode(const QString& base, const DictionaryNode& node);
 	void removeNode(const QString& base);
-	DictionaryNode& getNode(const QString& base);
+	bool getNode(const QString& base, DictionaryNode& out);
 	//Получить список базовых слов
 	std::vector<QString> getBases() const;
 	size_t size() const;

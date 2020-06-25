@@ -67,7 +67,8 @@ void DictionaryProvider::saveToFile(const QFileInfo& path, Dictionary& dict) {
 			//пишем базовое слово
 			data_stream << bases[i];
 			//получаем запись
-			auto node = dict.getNode(bases[i]);
+			DictionaryNode node;
+			dict.getNode(bases[i], node);
 			//получаем кол-во префиксов падежей для данного слова
 			size_t declens_cnt = node.size();
 			//пишем кол-во падежей

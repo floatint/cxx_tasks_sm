@@ -8,11 +8,12 @@ void Dictionary::removeNode(const QString& base) {
 	m_nodes.erase(base);
 }
 
-DictionaryNode& Dictionary::getNode(const QString& base) {
+bool Dictionary::getNode(const QString& base, DictionaryNode& out) {
 	auto nodeIt = m_nodes.find(base);
 	if (nodeIt == m_nodes.end())
-		throw std::exception("Can't found base in the dectionary");
-	return nodeIt->second;
+		return false;
+	out = nodeIt->second;
+	return true;;
 }
 
 std::vector<QString> Dictionary::getBases() const {

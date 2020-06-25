@@ -106,9 +106,26 @@ void MainWindow::createDictionary() {
 }
 
 void MainWindow::openFile() {
-	auto w = new FileWindow(QFileInfo(""));
-	m_mdiArea->addSubWindow(w);
-	w->show();
+	QString fileName = QFileDialog::getOpenFileName(this, "Select words file");
+	if (!fileName.isEmpty()) {
+		QFileInfo fi(fileName);
+		if (fi.exists()) {
+			try {
+				auto w = new FileWindow(fi, m_dict);
+				m_mdiArea->addSubWindow(w);
+				w->show();
+			}
+			catch (const std::exception& ex) {
+				Messages::error(ex.what());
+			}
+		}
+		else {
+			Messages::info("Words file not exists");
+		}
+	}
+	else {
+		Messages::info("Words file not selected");
+	}
 }
 
 void MainWindow::openDictEditor() {
