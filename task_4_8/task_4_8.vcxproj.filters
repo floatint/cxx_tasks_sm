@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files\dictionary">
+      <UniqueIdentifier>{4518224f-d69d-45c8-9a57-74ff8776a2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dictionary">
+      <UniqueIdentifier>{8d9a864e-e4e4-46ec-bd7f-35191e8dcb27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\io">
+      <UniqueIdentifier>{e02f2ef6-db3f-4152-ac44-2f5f6621fd2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\io">
+      <UniqueIdentifier>{6ec09420-4b75-4536-beba-4138835bb48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ui">
+      <UniqueIdentifier>{71124b64-68bd-412c-9052-08e6a4b91968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
+      <UniqueIdentifier>{04ba5c85-f8de-4c94-8188-41db383ed994}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="task_4_8.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="dict_editor.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="declension.cpp">
+      <Filter>Source Files\dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary.cpp">
+      <Filter>Source Files\dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary_helper.cpp">
+      <Filter>Source Files\dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary_node.cpp">
+      <Filter>Source Files\dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary_provider.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="messages.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="dict_editor_window.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="words_file_provider.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="filewindow.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="task_4_8.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="qt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary.h">
+      <Filter>Header Files\dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="declension.h">
+      <Filter>Header Files\dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary_helper.h">
+      <Filter>Header Files\dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary_node.h">
+      <Filter>Header Files\dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="messages.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary_provider.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="words_file_provider.h">
+      <Filter>Header Files\io</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="dict_editor_window.h">
+      <Filter>Header Files\ui</Filter>
+    </QtMoc>
+    <QtMoc Include="mainwindow.h">
+      <Filter>Header Files\ui</Filter>
+    </QtMoc>
+    <QtMoc Include="filewindow.h">
+      <Filter>Header Files\ui</Filter>
+    </QtMoc>
+  </ItemGroup>
+</Project>
