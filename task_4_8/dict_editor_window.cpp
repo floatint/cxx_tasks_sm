@@ -43,7 +43,7 @@ void DictEditorWindow::addWord() {
 	ui.prefixEdit_4->clear();
 	ui.prefixEdit_5->clear();
 	ui.prefixEdit_6->clear();
-	ui.wordsList->setCurrentIndex(QModelIndex());
+	//ui.wordsList->setCurrentIndex(QModelIndex());
 }
 
 void DictEditorWindow::saveWord() {
@@ -110,6 +110,8 @@ void DictEditorWindow::saveWord() {
 
 		//добавляем запись в словарь
 		m_dict.addNode(baseWord, *m_dictNode);
+		//удаляем временный объект
+		//delete m_dictNode;
 		//обновим список слов
 		updateWordsList();
 	}
@@ -127,6 +129,9 @@ void DictEditorWindow::deleteWord() {
 }
 
 void DictEditorWindow::wordListItemChanged(QListWidgetItem *curr, QListWidgetItem *prev) {
+	//если в процессе обновления, то просто выйдем
+	if (m_isUpdated)
+		return;
 	if (m_dictNode != nullptr) {
 		delete m_dictNode;
 	}
@@ -156,6 +161,7 @@ void DictEditorWindow::wordListItemChanged(QListWidgetItem *curr, QListWidgetIte
 }
 
 void DictEditorWindow::updateWordsList() {
+	m_isUpdated = true;
 	//очистим список слов
 	m_wordsList.clear();
 	//далее опять заполним его 
@@ -172,4 +178,5 @@ void DictEditorWindow::updateWordsList() {
 		//в списке слова в именительном падеже
 		ui.wordsList->addItem(m_wordsList[i].first + m_wordsList[i].second.getPrefix(Declension::Nominative));
 	}
+	m_isUpdated = false;
 }

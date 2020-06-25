@@ -1,8 +1,8 @@
 #include "dictionary_node.h"
 
-//DictionaryNode::DictionaryNode() {
-//	m_declensions = std::vector<std::pair<QString, Declension>>();
-//}
+DictionaryNode::DictionaryNode() {
+	m_declensions = std::vector<std::pair<QString, Declension>>();
+}
 
 void DictionaryNode::addDeclension(const QString& prefix, Declension d) {
 	m_declensions.push_back({ prefix, d });

@@ -10,7 +10,7 @@
 
 class DictionaryNode {
 public:
-	//DictionaryNode();
+	DictionaryNode();
 	void addDeclension(const QString& prefix, Declension d);
 	Declension getDeclension(const QString& prefix);
 	QString getPrefix(Declension d);
