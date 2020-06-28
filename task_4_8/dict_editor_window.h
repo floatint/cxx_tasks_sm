@@ -22,7 +22,7 @@ private:
 
 	//логика
 	//обработка добавления слова
-	void addWord();
+	void newWord();
 	//удалить слово из словаря
 	void deleteWord();
 	//сохранить слово
@@ -34,6 +34,8 @@ private:
 
 	//данные
 
+	//базовый заголовок диалога
+	const QString DIALOG_TITLE = "Dictionary Editor";
 	//вспомогательная переменная для событий, чтобы не войти в рекурсию
 	bool m_isUpdated;
 

@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setupUi();
 	m_editorOpen = false;
-    //ui.setupUi(this);
 }
 
 //
@@ -54,7 +53,7 @@ void MainWindow::setupText() {
 	m_dictionaryMenu->setTitle("Dictionary");
 	m_editDictAction->setText("Edit dictionary");
 	m_dictSaveAction->setText("Save dictionary");
-	m_openFileAction->setText("Open file");
+	m_openFileAction->setText("Open words file");
 }
 
 
@@ -62,7 +61,6 @@ void MainWindow::openDictionary() {
 	//выбираем файл со словарем
 	QString dictFileName = QFileDialog::getOpenFileName(this, "Select dictionary file");
 	if (!dictFileName.isEmpty()) {
-		//read file
 		try {
 			//читаем словарь
 			m_dict = DictionaryProvider::loadFromFile(QFileInfo(dictFileName));

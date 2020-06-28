@@ -17,5 +17,4 @@ std::vector<QString> WordsClassProvider::readFile(const QFileInfo& filePath) {
 	}
 	else
 		throw std::exception("Can't open words file");
-	return std::vector<QString>();
 }

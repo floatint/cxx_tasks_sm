@@ -18,5 +18,5 @@ public:
 	//Получить список всех окончаний
 	std::vector<QString> getDeclensionPrefixes() const;
 private:
-	std::vector<std::pair<QString, Declension>> m_declensions;
+	std::map<Declension, QString> m_declensions;
 };

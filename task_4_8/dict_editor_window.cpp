@@ -9,9 +9,9 @@ DictEditorWindow::DictEditorWindow(Dictionary& dict, QWidget *parent)
 	: QDialog(parent),
 	m_dict(dict)
 {
-	//m_dict = dict;
 	m_dictNode = nullptr;
 	ui.setupUi(this);
+	this->setWindowTitle(DIALOG_TITLE);
 	//обновляем список слов
 	updateWordsList();
 	//рисуем комбобоксы
@@ -26,12 +26,12 @@ DictEditorWindow::DictEditorWindow(Dictionary& dict, QWidget *parent)
 
 void DictEditorWindow::setupSlots() {
 	connect(ui.wordsList, &QListWidget::currentItemChanged, this, &DictEditorWindow::wordListItemChanged);
-	connect(ui.addButton, &QPushButton::clicked, this, &DictEditorWindow::addWord);
+	connect(ui.newButton, &QPushButton::clicked, this, &DictEditorWindow::newWord);
 	connect(ui.saveButton, &QPushButton::clicked, this, &DictEditorWindow::saveWord);
 	connect(ui.deleteButton, &QPushButton::clicked, this, &DictEditorWindow::deleteWord);
 }
 
-void DictEditorWindow::addWord() {
+void DictEditorWindow::newWord() {
 	if (m_dictNode != nullptr)
 		delete m_dictNode;
 	//создаем временный объект
@@ -43,7 +43,12 @@ void DictEditorWindow::addWord() {
 	ui.prefixEdit_4->clear();
 	ui.prefixEdit_5->clear();
 	ui.prefixEdit_6->clear();
-	//ui.wordsList->setCurrentIndex(QModelIndex());
+	//отменяем предыдущий индекс, и установим флаг чтобы не войти в рекурсию
+	m_isUpdated = true;
+	ui.wordsList->setCurrentIndex(QModelIndex());
+	m_isUpdated = false;
+	//обновим шапку 
+	this->setWindowTitle(DIALOG_TITLE + " - New Word");
 }
 
 void DictEditorWindow::saveWord() {
@@ -91,29 +96,20 @@ void DictEditorWindow::saveWord() {
 		QString baseWord = DictionaryHelper::getBase(words);
 
 		//базовое слово есть, далее для каждого получим префикс и падеж
-		//DictionaryNode newDictNode;
-		//получим индексы падежей для каждого слова
-		std::vector<int> declensIndexes;
-		declensIndexes.push_back(ui.declSelect_1->currentIndex());
-		declensIndexes.push_back(ui.declSelect_2->currentIndex());
-		declensIndexes.push_back(ui.declSelect_3->currentIndex());
-		declensIndexes.push_back(ui.declSelect_4->currentIndex());
-		declensIndexes.push_back(ui.declSelect_5->currentIndex());
-		declensIndexes.push_back(ui.declSelect_6->currentIndex());
 		//заполняем запись в словаре
 		for (int i = 0; i < words.size(); i++) {
 			//получаем префикс
 			auto prefix = words[i].right(words[i].size() - baseWord.size());
-			Declension decl = (Declension)declensIndexes[i];
+			Declension decl = (Declension)declIndexes[i];
 			m_dictNode->addDeclension(prefix, decl);
 		}
 
 		//добавляем запись в словарь
 		m_dict.addNode(baseWord, *m_dictNode);
-		//удаляем временный объект
-		//delete m_dictNode;
 		//обновим список слов
 		updateWordsList();
+		//установим фокус на последний элемент
+		ui.wordsList->setCurrentRow(ui.wordsList->count() - 1);
 	}
 }
 
@@ -126,9 +122,18 @@ void DictEditorWindow::deleteWord() {
 	m_dict.removeNode(dictNode.first);
 	//обновляем ui
 	updateWordsList();
+	//нулим поля ввода
+	ui.prefixEdit_1->clear();
+	ui.prefixEdit_2->clear();
+	ui.prefixEdit_3->clear();
+	ui.prefixEdit_4->clear();
+	ui.prefixEdit_5->clear();
+	ui.prefixEdit_6->clear();
 }
 
 void DictEditorWindow::wordListItemChanged(QListWidgetItem *curr, QListWidgetItem *prev) {
+	//сбрасываем шапку
+	this->setWindowTitle(DIALOG_TITLE);
 	//если в процессе обновления, то просто выйдем
 	if (m_isUpdated)
 		return;
@@ -153,11 +158,10 @@ void DictEditorWindow::wordListItemChanged(QListWidgetItem *curr, QListWidgetIte
 		ui.prefixEdit_6->setText(m_wordsList[i].first + m_wordsList[i].second.getPrefix(Declension::Prepositional));
 		ui.declSelect_6->setCurrentIndex((int)Declension::Prepositional);
 
+		//создаем временную запись
 		m_dictNode = new DictionaryNode();
+		this->setWindowTitle(DIALOG_TITLE + " - " + m_wordsList[i].first + m_wordsList[i].second.getPrefix(Declension::Nominative));
 	}
-	//получаем базовое слово
-	//QString base = 
-	//Messages::error("fail");
 }
 
 void DictEditorWindow::updateWordsList() {
@@ -178,5 +182,6 @@ void DictEditorWindow::updateWordsList() {
 		//в списке слова в именительном падеже
 		ui.wordsList->addItem(m_wordsList[i].first + m_wordsList[i].second.getPrefix(Declension::Nominative));
 	}
+
 	m_isUpdated = false;
 }
